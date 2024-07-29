@@ -1,6 +1,7 @@
 package com.SomeshDataJPA.spring_data_jpa_tutorial.repository;
 
 import com.SomeshDataJPA.spring_data_jpa_tutorial.entity.Course;
+import com.SomeshDataJPA.spring_data_jpa_tutorial.entity.Student;
 import com.SomeshDataJPA.spring_data_jpa_tutorial.entity.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,38 @@ class CourseRepositoryTest {
 
         List<Course> courses = courseRepository.findAll(sortByTitle).getContent();
         System.out.println("Course : " + courses);
+    }
+
+    @Test
+    public void printFindByTitleContaining(){
+        Pageable firstPageTenRecords =
+                PageRequest.of(0,10);
+        List<Course> courses = courseRepository.findByTitleContaining("D",firstPageTenRecords).getContent();
+
+        System.out.println("Courses = " + courses);
+    }
+
+    @Test
+    public void saveCourseWithStudentAndTeacher(){
+        Teacher teacher = Teacher.builder()
+                .firstName("Lizze")
+                .lastName("Morgan")
+                .build();
+
+        Student student = Student.builder()
+                .firstName("Abishek")
+                .lastName("singh")
+                .emailId("abishek@gmail.com")
+                .build();
+
+        Course course = Course.builder()
+                .title("AI")
+                .credit(12)
+                .teacher(teacher)
+                .build();
+
+        course.addStudents(student);
+
+        courseRepository.save(course);
     }
 }
